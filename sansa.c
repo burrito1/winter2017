@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define FILENAME        "5000-1000000"
+#define FILENAME        "example.col"
 #define mode            "r"
 int global = 0;                 //Variable global de AddVertex
 
@@ -135,12 +135,41 @@ int Primavera(WinterIsHere W){
     return 1;
 }
 
+u32 Greedy(WinterIsHere W){
+
+	int i, j, k, aux= 0;
+	int c = 1;
+	u32 highestcolor = 2;
+
+	(W->listV[(W->orden[0])])->color = 1;              //Color 1 al primero
+
+	for (i = 1; i < W->v; i++) {
+        (W->listV[(W->orden[i])])->color = 2;          // A todos los coloremamos con 2
+    }
+    
+    for (j = 1; j < W->v; j++) {
+    	for (k = 0; k < (W->listV[(W->orden[j])])->grade; k++) {
+    		aux = W->listV[(W->orden[j])]->ngbrs[k];
+    		for (c = 1; c < highestcolor; c++) {
+    			if (W->listV[(W->orden[j])]->color == W->listV[(W->orden[aux])]->color) {
+   					highestcolor++;
+   					printf("NEW COLOR: %u\n", highestcolor);
+   					W->listV[(W->orden[aux])]->color = highestcolor;
+   				}
+			}
+		}
+	}
+
+	return highestcolor;
+}
+
 int main(void) {
 
 	WinterIsHere W = WinterIsComing();
 
-    int i;
+    int i,j;
     u32 sumofgrades = 0;
+    u32 greedyresult = 0;
 
     for(i=0;i<W->v;i++){
     	printf("Vector %d of %u: (%u, %u, %u, [x])\n", i+1, W->v, W->listV[i]->name, W->listV[i]->color,W->listV[i]->grade);
@@ -155,6 +184,15 @@ int main(void) {
     printf ("-> Cantidad de colores: %u\n", W->v);
     printf ("-> W tiene un coloreo propio\n");
     printf ("...............................\n");
+   	printf ("Starting Greedy\n");
+
+   	greedyresult = Greedy(W);
+
+   	/*printf ("Increible el numero magico es: %u\n", greedyresult);
+   	for(j=0;j<W->v;j++){
+    	printf("Vector %d of %u: (%u, %u, %u, [x])\n", j+1, W->v, W->listV[j]->name, W->listV[j]->color,W->listV[j]->grade);
+    }*/
+   	printf ("Done :D\n");
 
     return 1;
 }
