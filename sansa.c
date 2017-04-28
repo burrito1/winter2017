@@ -1,13 +1,13 @@
-#include "sansa.h"
+#include "JonSnow.h"
 #include <stdlib.h>
 #include <stdio.h>
 
-#define FILENAME        "xg25"
+#define FILENAME        "5000-1000000"
 #define mode            "r"
 int global = 0;                 //Variable global de AddVertex
 
 typedef struct Grafo {
-    VectorIsHere *listV;        //Lista de vertices
+    VertexIsHere *listV;        //Lista de vertices
     u32 v;                      //Cantidad vertices
     u32 w;                      //Cantidad de lados
     u32 *orden;                 //Orden de indices para greedy
@@ -37,7 +37,7 @@ u32 AddVertex(WinterIsHere W, unsigned int x){
         i++;
     }
     if(i==global){
-        W->listV[i] = calloc(1, sizeof(VectorIsHere));
+        W->listV[i] = calloc(1, sizeof(VertexIsHere));
         W->orden[i] = i;
         W->listV[i]->name = x;
         W->listV[i]->color = i+1;
@@ -75,7 +75,7 @@ int LoadWinter(WinterIsHere W){
     
     fscanf(ifp, "%*s %d %d\n", &W->v, &W->w);
 
-    W->listV = calloc(W->v, sizeof(VectorIsHere));
+    W->listV = calloc(W->v, sizeof(VertexIsHere));
     W->orden = calloc(W->v, sizeof(u32));
     
     u32 i = 0;
@@ -189,6 +189,38 @@ u32 Greedy(WinterIsHere W){
     return highestcolor;
 }
 
+u32 NombreDelVertice (WinterIsHere W, u32 x){
+
+	u32 r;
+	r = W->listV[x]->name;
+
+	return r;
+}
+
+u32 ColorDelVertice (WinterIsHere W, u32 x){
+
+	u32 r;
+	r = W->listV[x]->color;
+
+	return r;
+}
+
+u32 GradoDelVertice (WinterIsHere W, u32 x){
+
+	u32 r;
+	r = W->listV[x]->grade;
+
+	return r;
+}
+
+u32 IesimoVecino (WinterIsHere W, u32 x, u32 i){
+
+	u32 r, k;
+	k = W->listV[(W->orden[x])]->ngbrs[i];
+	r = W->listV[k]->name;
+
+	return r;
+}
 
 int main(void) {
 
@@ -202,7 +234,7 @@ int main(void) {
     greedyresult = Greedy(W);
 
     for(i=0;i<W->v;i++){
-    	//printf("Vector %d of %u: (%u, %u, %u, [x])\n", i+1, W->v, W->listV[i]->name, W->listV[i]->color,W->listV[i]->grade);
+    	//printf("VERTEX %d of %u: (%u, %u, %u, [x])\n", i+1, W->v, W->listV[i]->name, W->listV[i]->color,W->listV[i]->grade);
     	sumofgrades = sumofgrades + W->listV[i]->grade;
     }
     
@@ -217,13 +249,19 @@ int main(void) {
     printf ("...............................\n");
    	printf ("Starting Greedy\n");
 
+
+   	u32 nombre, color, grado;
+
    	
-   	/*
+   	
    	int j;
    	for(j=0;j<W->v;j++){
-    	printf("Vector %d of %u: (%u, %u, %u, [x])\n", j+1, W->v, W->listV[j]->name, W->listV[j]->color,W->listV[j]->grade);
+   		nombre = NombreDelVertice(W, j);
+   		color = ColorDelVertice(W, j);
+   		grado = GradoDelVertice(W, j);
+    	printf("VERTEX %d of %u: (%u, %u, %u, [x])\n", j+1, W->v, nombre, color, grado);
     }
-    */
+    
    	printf ("El resultado de Greedy es: %u\n", greedyresult);
 
     return 1;
