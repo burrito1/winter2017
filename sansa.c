@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define FILENAME        "example.col"
+#define FILENAME        "xg25"
 #define mode            "r"
 int global = 0;                 //Variable global de AddVertex
 
@@ -47,7 +47,7 @@ u32 AddVertex(WinterIsHere W, unsigned int x){
         return i;
     } else {
         W->listV[i]->grade++;
-        //printf("GRADE ++ in %u:(%u, %u, %u, [])\n", x, W->listV[i]->name, W->listV[i]->color,W->listV[i]->grade);
+        //printf("GRADE ++ IN V: %u:(%u, %u, %u, [])\n", x, W->listV[i]->name, W->listV[i]->color,W->listV[i]->grade);
         return i;
     }
 }
@@ -88,13 +88,10 @@ int LoadWinter(WinterIsHere W){
 
     while(fscanf(ifp, "e %u %u\n", &x1, &x2) != EOF)
     {   
-        //printf("e: %u %u\n", x1, x2); //Esta linea permite ver que inputs esta leyendo del archivo en este momento
         Verticei=AddVertex(W,x1);
         Verticej=AddVertex(W,x2);
         xi1[i] = Verticei;
         xj2[i] = Verticej;
-        //printf("(Verticei, Verticej) : (%u, %u)\n", Verticei, Verticej);
-        //printf("(xi1[%u],xj2[%u]) : (%u, %u)\n", i, i, xi1[i], xj2[i]);
         i++;
     }
     
@@ -132,49 +129,83 @@ WinterIsHere WinterIsComing(){
 
 int Primavera(WinterIsHere W){
     //Destrye W y libera la memoria alocada. Return 1 = OK , 0 = ERROR
+    int i = 0;
+    for(i=0; i<W->v;i++){
+        free(W->listV[i]->ngbrs);
+        free(W->listV[i]);
+    }
+    free(W->orden);
+    free(W);
+    W = NULL;
     return 1;
 }
 
 u32 Greedy(WinterIsHere W){
+	
 
-	int i, j, k, aux= 0;
-	int c = 1;
-	u32 highestcolor = 2;
+	u32 i,j,k;
+    u32 x;
+    u32 highestcolor = 0;
 
-	(W->listV[(W->orden[0])])->color = 1;              //Color 1 al primero
+    (W->listV[(W->orden[0])])->color = 1;
 
-	for (i = 1; i < W->v; i++) {
-        (W->listV[(W->orden[i])])->color = 2;          // A todos los coloremamos con 2
+    for (i = 1; i < W->v; i++) {
+        (W->listV[(W->orden[i])])->color = -1;
     }
     
+    int coloresdisponibles[W->v];
+    for (x = 0; x < W->v; x++) {
+        coloresdisponibles[x] = 0;
+    }
+    u32 index;
     for (j = 1; j < W->v; j++) {
-    	for (k = 0; k < (W->listV[(W->orden[j])])->grade; k++) {
-    		aux = W->listV[(W->orden[j])]->ngbrs[k];
-    		for (c = 1; c < highestcolor; c++) {
-    			if (W->listV[(W->orden[j])]->color == W->listV[(W->orden[aux])]->color) {
-   					highestcolor++;
-   					printf("NEW COLOR: %u\n", highestcolor);
-   					W->listV[(W->orden[aux])]->color = highestcolor;
-   				}
-			}
-		}
-	}
+        
+        for (k = 0; k < (W->listV[(W->orden[j])])->grade; k++) { 
+            index = W->listV[(W->orden[j])]->ngbrs[k];
+            if (W->listV[index]->color != -1) {
+                coloresdisponibles[(W->listV[index])->color] = 1; 
+            }
+        }
 
-	return highestcolor;
+        for (x = 1; x < W->v; x++) {
+            if (coloresdisponibles[x] == 0) {
+                break;
+            }
+        }
+
+        (W->listV[(W->orden[j])])->color = x;
+        if(x > highestcolor){
+            highestcolor = x;
+        }
+
+        for (k = 0; k < (W->listV[(W->orden[j])])->grade; k++) {
+            index = W->listV[(W->orden[j])]->ngbrs[k];
+            if (W->listV[index]->color != -1) {
+                coloresdisponibles[(W->listV[index])->color] = 0; 
+            }
+        }
+    }
+
+    return highestcolor;
 }
+
 
 int main(void) {
 
 	WinterIsHere W = WinterIsComing();
 
-    int i,j;
+    int i;
     u32 sumofgrades = 0;
     u32 greedyresult = 0;
 
+    
+    greedyresult = Greedy(W);
+
     for(i=0;i<W->v;i++){
-    	printf("Vector %d of %u: (%u, %u, %u, [x])\n", i+1, W->v, W->listV[i]->name, W->listV[i]->color,W->listV[i]->grade);
+    	//printf("Vector %d of %u: (%u, %u, %u, [x])\n", i+1, W->v, W->listV[i]->name, W->listV[i]->color,W->listV[i]->grade);
     	sumofgrades = sumofgrades + W->listV[i]->grade;
     }
+    
 
     printf ("...............................\n");
     printf ("Grafo W:\n");
@@ -186,13 +217,14 @@ int main(void) {
     printf ("...............................\n");
    	printf ("Starting Greedy\n");
 
-   	greedyresult = Greedy(W);
-
-   	/*printf ("Increible el numero magico es: %u\n", greedyresult);
+   	
+   	/*
+   	int j;
    	for(j=0;j<W->v;j++){
     	printf("Vector %d of %u: (%u, %u, %u, [x])\n", j+1, W->v, W->listV[j]->name, W->listV[j]->color,W->listV[j]->grade);
-    }*/
-   	printf ("Done :D\n");
+    }
+    */
+   	printf ("El resultado de Greedy es: %u\n", greedyresult);
 
     return 1;
 }
