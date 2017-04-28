@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define FILENAME        "5000-1000000"
+//#define FILENAME        "xg222222222222222222222222222222222222222222222222222222222222222222222222222222222222"
 #define mode            "r"
 int global = 0;                 //Variable global de AddVertex
 
@@ -62,6 +62,9 @@ void AddNeighbors(WinterIsHere W, u32 i, u32 ngbr){
 int LoadWinter(WinterIsHere W){
     
     FILE *ifp;
+    char FILENAME[80];
+    printf("Ingrese el nombre del archivo\n");
+	scanf("%s", FILENAME);
     ifp = fopen(FILENAME, mode);
     char c;
 
@@ -70,6 +73,7 @@ int LoadWinter(WinterIsHere W){
         exit(1);
     }
 
+    printf ("Reading FILE: %s\n", FILENAME);
     while(fscanf(ifp, "%c", &c) != EOF && c != 'p')
         while(fscanf(ifp, "%c", &c) != EOF && c != '\n');
     
@@ -114,7 +118,6 @@ WinterIsHere WinterIsComing(){
 
 	printf("Winter is comming\n");
     WinterIsHere W = NewWinter();
-    printf ("Reading FILE: %s\n", FILENAME);
     int error;
     error = LoadWinter(W);
 
@@ -222,6 +225,107 @@ u32 IesimoVecino (WinterIsHere W, u32 x, u32 i){
 	return r;
 }
 
+u32 NumeroDeVertices(WinterIsHere W){
+
+	u32 r;
+	r = W->v;
+
+	return r;
+}
+
+u32 NumeroDeLados(WinterIsHere W){
+
+	u32 r;
+	r = W->w;
+	
+	return r;
+}
+
+u32 NumeroDeVerticesDeColor(WinterIsHere W, u32 i){
+
+	u32 r = 0;
+	u32 j = 0;
+	for (j=0; j< W->v; j++){
+		if ((W->listV[j]->color) == i){
+			r++;
+		}
+	}
+	
+	return r;
+}
+
+u32 NumeroDeColores(WinterIsHere W){
+
+	u32 j = 0;
+	u32 c = 1;
+	for (j=0; j< W->v; j++){
+		if ((W->listV[j]->color) > c){
+			c = W->listV[j]->color;
+		}
+	}
+
+	return c;
+}
+
+u32 IesimoVerticeEnElOrden(WinterIsHere W, u32 i){
+
+	u32 r;
+	r = W->listV[(W->orden[i])]->name;
+
+	return r;
+}
+
+int natcomp (const void * a, const void * b){
+	return ( *(int*)a - *(int*)b );
+}
+
+int wpcomp (const void * a, const void * b){
+	const VertexIsHere v1 = *(VertexIsHere*)a;
+	const VertexIsHere v2 = *(VertexIsHere*)b;
+	
+	const u32 j = v1->grade;
+	const u32 k = v2->grade; 
+	
+	if (j > k){
+		return -1;
+	} else if (j == k){
+		return 0;
+	}else{
+		return 1;
+	}
+}
+
+
+void OrdenNatural(WinterIsHere W){
+
+	qsort(W->orden, W->v, sizeof(u32), natcomp);
+}
+
+void OrdenWelshPowell(WinterIsHere W){
+
+	int j,k;
+	u32 prej;
+	u32 aux; 
+	for (j=0; j< W->v -1; j++){
+		prej = j;
+		for (k=j+1; k< W->v; k++){
+			if (W->listV[W->orden[prej]]->grade < W->listV[W->orden[k]]->grade){
+				prej = k;
+			}
+		}
+		if (prej != j){
+			aux = W->orden[j];
+			W->orden[j] = W->orden[prej];
+			W->orden[prej] = aux;
+		}
+	}
+}
+	//qsort(W->orden, W->v, sizeof(VertexIsHere), wpcomp);
+
+
+
+
+
 int main(void) {
 
 	WinterIsHere W = WinterIsComing();
@@ -238,31 +342,46 @@ int main(void) {
     	sumofgrades = sumofgrades + W->listV[i]->grade;
     }
     
+    u32 vertices, lados , numerosdeverticesdeuncolor, maxcolor, iesimoverticeeni;
+
+    vertices = NumeroDeVertices(W);
+    lados = NumeroDeLados(W);
+    numerosdeverticesdeuncolor = NumeroDeVerticesDeColor(W, 2);
+    maxcolor = NumeroDeColores(W);
+    iesimoverticeeni = IesimoVerticeEnElOrden(W, 2);
 
     printf ("...............................\n");
     printf ("Grafo W:\n");
-    printf ("-> Vertices: %u\n", W->v);
-    printf ("-> Lados: %u\n", W->w);
-    printf ("-> Suma de Grados: %u\n", sumofgrades);
+    printf ("-> Vertices: %u\n", vertices);
+    printf ("-> Lados: %u\n", lados);
+    printf ("-> Numero de vertices color 2: %u\n", numerosdeverticesdeuncolor);
+    printf ("-> Numero de colores: %u\n", maxcolor);
+    printf ("-> Iesimo Vertice en 2: %u\n", iesimoverticeeni);
+    printf ("-> Suma de Grados (Debe ser lados*2): %u\n", sumofgrades);
     printf ("-> Cantidad de colores: %u\n", W->v);
     printf ("-> W tiene un coloreo propio\n");
     printf ("...............................\n");
    	printf ("Starting Greedy\n");
 
-
-   	u32 nombre, color, grado;
-
    	
+   	u32 color, grado;
+
+   	OrdenWelshPowell(W);
    	
    	int j;
    	for(j=0;j<W->v;j++){
-   		nombre = NombreDelVertice(W, j);
+   		//nombre = NombreDelVertice(W, j);
    		color = ColorDelVertice(W, j);
    		grado = GradoDelVertice(W, j);
-    	printf("VERTEX %d of %u: (%u, %u, %u, [x])\n", j+1, W->v, nombre, color, grado);
+    	printf("VERTEX %d of %u: (%u, %u, %d, [x])\n", j+1, W->v, W->orden[j], color, grado);
     }
     
+
+
    	printf ("El resultado de Greedy es: %u\n", greedyresult);
+
+
+
 
     return 1;
 }
