@@ -6,11 +6,14 @@ Integrantes:
 * Gonzalo Nicolás Rivero
 * Jenaro Calviño
 
+Recomendaciones:
+* Leer el README.md desde https://github.com/burrito1/winter2017
+* Leer el articulo/post de http://www.geeksforgeeks.org/graph-coloring-set-2-greedy-algorithm/
+
 Comandos consola para ejecutar en linux:
 
-    gcc -Wall -Werror -o exe sansa.c
-
-    ./exe
+    burrito@burrito gcc -Wall -Werror -o exe sansa.c
+    burrito@burrito ./exe
 
 
 ## 2. Estructura ##
