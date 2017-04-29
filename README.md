@@ -49,9 +49,61 @@ _Primavera()_: Libera memoria y destruye el grafo W.
 
 _Greedy()_: Colorea el grafo W de la siguiente forma:
 
+¿Que hace greedy?
 >1. Colorea el primer vertice con el primer color.
->2. Para los siguientes V-1 vertices: Colorear el vertice elejido con el menor color posible talque ninguno de sus vecinos tengan ese color. En el caso de no ser posible y que todos los colores usados esten coloreando vecinos de v, pintar v con un nuevo color
+>2. Para los siguientes V-1 vertices: Colorear el vertice elejido con el menor color posible talque ninguno de sus vecinos tengan ese color. En el caso de no ser posible y que todos los colores usados esten coloreando vecinos de v, pintar v con un nuevo color c.
+
+##### Implementación de greedy: #####
+
+Coloreamos el primer vertice con el primer color.
+    
+    (W->listV[(W->orden[0])])->color = 1; 
+    
+Descoloreamos todos los demas vertices.
+
+       for (i = 1; i < W->v; i++) {
+        (W->listV[(W->orden[i])])->color = -1;
+    }
+
+Creamos un arreglo con todos los colores posibles con los que podemos coloriar a cada vertices, si el arreglo en la posicion x tiene un 0, significa que x+1 es un color disponible para pintar al vertice.
+
+        int coloresdisponibles[W->v];
+    for (x = 0; x < W->v; x++) {
+        coloresdisponibles[x] = 0;
+    }
+    
+Por cada vertice j, recorremos todos sus vecinos k, en el caso de que el vecino k este coloreado con un color c, asignamos en la posicion c del arreglo con los colores disponibles para j un 1.
+
+        u32 index;
+    for (j = 1; j < W->v; j++) {                                           //Recorro j
         
+        for (k = 0; k < (W->listV[(W->orden[j])])->grade; k++) {           //Recorro k vecinos de j
+            index = W->listV[(W->orden[j])]->ngbrs[k];
+            if (W->listV[index]->color != -1) {                            //Si el color en el k vecino de j no es -1 (Ya esta pintado)
+                coloresdisponibles[(W->listV[index])->color] = 1;          //Marco en mi arreglo de colores como 1 en la posicion color de k
+            }                                                              //De esta forma sabemos que el color igual al indice de esa posicion
+        }                                                                  //No puede ser usado para pintar j
+
+        for (x = 1; x < W->v; x++) {
+            if (coloresdisponibles[x] == 0) {                              //Recorro el arreglo hasta encontrar un color disponible
+                break;
+            }
+        }
+
+        (W->listV[(W->orden[j])])->color = x;                              //Pinto j con el color x donde x es la posicion+1 del primer disponible
+        if(x > highestcolor){
+            highestcolor = x;                                              //Si el nuevo color es mas grande que mi mayor color anterior lo cambio
+        }
+
+        for (k = 0; k < (W->listV[(W->orden[j])])->grade; k++) {
+            index = W->listV[(W->orden[j])]->ngbrs[k];
+            if (W->listV[index]->color != -1) {
+                coloresdisponibles[(W->listV[index])->color] = 0;          //Ajusto mi arreglo de colores para mi proximo j
+            }
+        }
+    }
+    
+
 _Bipartito()_: Devuelve 1 si el grafo es Bipartito, 0 caso contrario.
 
 
