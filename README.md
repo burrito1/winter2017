@@ -1,6 +1,6 @@
 # Graph Coloring winter2017
 
-## 2. Introducción ##
+## 1. Introducción ##
 
 Integrantes:
 * Gonzalo Nicolas Rivero
@@ -69,7 +69,7 @@ Donde listV es un arreglo con todos los vertices:
 
 **IesimoVerticeEnElOrden()**: Devuelve la etiqueta del vertice i en el orden guardado en ese momento.
 
-##### 6. Funciones de ordenación #####
+## 6. Funciones de ordenación ##
 
 **OrdenNatural()**: Ordena los vertices en orden creciente de sus “nombres” reales.
 
