@@ -18,7 +18,7 @@ Comandos consola para ejecutar en linux:
 Para el grafo se utilizo:
 
     typedef struct Grafo {
-        VectorIsHere *listV;        //Lista de vertices
+        VertexIsHere *listV;        //Lista de vertices
         u32 v;                      //Cantidad vertices
         u32 w;                      //Cantidad de lados
         u32 *orden;                 //Orden de indices para greedy
@@ -49,10 +49,8 @@ _Primavera()_: Libera memoria y destruye el grafo W.
 
 _Greedy()_: Colorea el grafo W de la siguiente forma:
 
-    1. Colorea el primer vertice con el primer color.
-    2. Para los siguientes V-1 vertices:
-        -> Colorear el vertice elejido con el menor color posible talque ninguno de sus vecinos tengan ese color
-        -> En el caso de no ser posible y que todos los colores usados esten coloreando vecinos de v, pintar v con un nuevo color
+>1. Colorea el primer vertice con el primer color.
+>2. Para los siguientes V-1 vertices: Colorear el vertice elejido con el menor color posible talque ninguno de sus vecinos tengan ese color. En el caso de no ser posible y que todos los colores usados esten coloreando vecinos de v, pintar v con un nuevo color
         
 _Bipartito()_: Devuelve 1 si el grafo es Bipartito, 0 caso contrario.
 
