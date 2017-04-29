@@ -362,7 +362,7 @@ int wpcomp (const void * a, const void * b){
 
 int bloque0comp (const void * a, const void * b){
 
-	return 1
+	return 1;
 
 }
 
@@ -405,6 +405,12 @@ void OrdenWelshPowell(WinterIsHere W){
 	qsort(W->orden, W->v, sizeof(VertexIsHere), wpcomp);
 }
 
+void AleatorizarVertices(WinterIsHere W, u32 x){
+
+	printf("JUST DO IT\n");
+
+}
+
 void ReordenamientoManteniendoBloqueColores(WinterIsHere W, u32 x){
 
 	if(x==0){
@@ -426,38 +432,28 @@ void ReordenamientoManteniendoBloqueColores(WinterIsHere W, u32 x){
 
 int main(void) {
 
+	/*
+	Borrar este main en caso de usar otro archivo que posea un main
+	*/
+	
 	WinterIsHere W = WinterIsComing();
-
-    int i;
-    u32 sumofgrades = 0;
-    u32 greedyresult = 0;
-    int bip = 0;
-    
+  	
+  	u32 greedyresult;
     greedyresult = Greedy(W);
-
-   	bip = Bipartito(W);
-
-    for(i=0;i<W->v;i++){
-    	//printf("VERTEX %d of %u: (%u, %u, %u, [x])\n", i+1, W->v, W->listV[i]->name, W->listV[i]->color,W->listV[i]->grade);
-    	sumofgrades = sumofgrades + W->listV[i]->grade;
-    }
     
-    u32 vertices, lados, maxcolor;
-
-    vertices = NumeroDeVertices(W);
-    lados = NumeroDeLados(W);
-    maxcolor = NumeroDeColores(W);
+    int i = 0;
+    u32 sumofgrades = 0;  //En clase le dije que la suma no me daba 2w porque no tenia esto inicializado a 0 xD
+    for(i=0;i<W->v;i++){
+    	sumofgrades = sumofgrades + W->listV[i]->grade;       //Chequeo sumgrades == 2w
+    }
 
     printf ("...............................\n");
     printf ("Grafo W:\n");
-    printf ("-> Vertices: %u\n", vertices);
-    printf ("-> Lados: %u\n", lados);
+    printf ("-> Vertices: %u\n", W->v);
+    printf ("-> Lados: %u\n", W->w);
     printf ("-> Suma de Grados: %u\n", sumofgrades);
-    printf ("-> Cantidad de colores: %u\n", maxcolor);
     printf ("-> W tiene un coloreo propio\n");
    	printf ("->El resultado de Greedy es: %u\n", greedyresult);
-   	printf ("->El resultado de Bipartito es: %d\n", bip);
-
 
     return 1;
 }
