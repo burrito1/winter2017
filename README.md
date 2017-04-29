@@ -10,10 +10,10 @@ Recomendaciones:
 * Leer el README.md desde https://github.com/burrito1/winter2017
 * Leer el articulo/post de http://www.geeksforgeeks.org/graph-coloring-set-2-greedy-algorithm/
 
-Comandos consola para ejecutar en linux:
+Comandos consola para compilar y ejecutar en linux:
 
-    burrito@burrito gcc -Wall -Werror -o exe sansa.c
-    burrito@burrito ./exe
+    gcc -Wall -Werror -o exe sansa.c
+    ./exe
 
 
 ## 2. Estructura ##
