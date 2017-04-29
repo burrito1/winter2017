@@ -7,9 +7,9 @@ Comandos consola para ejecutar en linux
     ./exe
 
 
-#### sansa.c ####
+## Estructura ##
 
-Estructuras utilizada:
+Para el grafo se utilizo:
 
     typedef struct Grafo {
         VectorIsHere *listV;        //Lista de vertices
@@ -26,10 +26,9 @@ Donde listV es un arreglo con todos los vertices:
         u32 grade;                  //Cantidad de vecinos del vertice
         u32 *ngbrs;                 //Arreglo con indices a sus vecinos
     } VerticeSt;
-    
-#### Lista de funciones ####
 
-##### Construccion y destrucción del grafo #####
+
+## Construccion y destrucción del grafo ##
 
 **NewWinter()**: Inicializa un grafo W.
 
@@ -39,7 +38,8 @@ Donde listV es un arreglo con todos los vertices:
 
 **Primavera()**: Libera memoria y destruye el grafo W.
 
-######Coloreo######
+
+## Coloreo ##
 
 **Greedy()**: Colorea el grafo W de la siguiente forma:
 
@@ -50,7 +50,8 @@ Donde listV es un arreglo con todos los vertices:
         
 **Bipartito()**: Devuelve 1 si el grafo es Bipartito, 0 caso contrario.
 
-##### Informacion del Vertice #####
+
+## Informacion del Vertice ##
 
 **NumeroDeVertices()**: Devuelve el numero de vertices de W.
 
@@ -73,7 +74,9 @@ no creciente.
 
 **ReordenManteniendoBloqueColores()**: Reordena el orden de los vertices manteniendo los bloques de vertices pintados por los mismos colores.
 
-##### Funciones de los vertices #####
+
+## Funciones de los vertices ##
+
 **NombreDelVertice()**: Devuelve el nombre real del vertice.
 
 **ColorDelVertice()**: Devuelve el color con el que esta coloreado el vertice.
