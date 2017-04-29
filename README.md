@@ -1,13 +1,19 @@
 # Graph Coloring winter2017
 
-Comandos consola para ejecutar en linux
+## 2. Introducción ##
+
+Integrantes:
+* Gonzalo Nicolas Rivero
+* Jenaro Calviño
+
+Comandos consola para ejecutar en linux:
 
     gcc -Wall -Werror -o exe sansa.c
 
     ./exe
 
 
-## Estructura ##
+## 2. Estructura ##
 
 Para el grafo se utilizo:
 
@@ -28,7 +34,7 @@ Donde listV es un arreglo con todos los vertices:
     } VerticeSt;
 
 
-## Construccion y destrucción del grafo ##
+## 3. Construccion y destrucción del grafo ##
 
 **NewWinter()**: Inicializa un grafo W.
 
@@ -39,7 +45,7 @@ Donde listV es un arreglo con todos los vertices:
 **Primavera()**: Libera memoria y destruye el grafo W.
 
 
-## Coloreo ##
+## 4. Coloreo ##
 
 **Greedy()**: Colorea el grafo W de la siguiente forma:
 
@@ -51,7 +57,7 @@ Donde listV es un arreglo con todos los vertices:
 **Bipartito()**: Devuelve 1 si el grafo es Bipartito, 0 caso contrario.
 
 
-## Informacion del Vertice ##
+## 5. Informacion del Vertice ##
 
 **NumeroDeVertices()**: Devuelve el numero de vertices de W.
 
@@ -63,7 +69,7 @@ Donde listV es un arreglo con todos los vertices:
 
 **IesimoVerticeEnElOrden()**: Devuelve la etiqueta del vertice i en el orden guardado en ese momento.
 
-##### Funciones de ordenación #####
+##### 6. Funciones de ordenación #####
 
 **OrdenNatural()**: Ordena los vertices en orden creciente de sus “nombres” reales.
 
@@ -75,7 +81,7 @@ no creciente.
 **ReordenManteniendoBloqueColores()**: Reordena el orden de los vertices manteniendo los bloques de vertices pintados por los mismos colores.
 
 
-## Funciones de los vertices ##
+## 7. Funciones de los vertices ##
 
 **NombreDelVertice()**: Devuelve el nombre real del vertice.
 
