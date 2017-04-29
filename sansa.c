@@ -257,6 +257,7 @@ int Bipartito (WinterIsHere W){
     return 1;
 }
 
+// FUNCIONES DEL VERTICE
 
 u32 NombreDelVertice (WinterIsHere W, u32 x){
 
@@ -341,24 +342,56 @@ u32 IesimoVerticeEnElOrden(WinterIsHere W, u32 i){
 	return r;
 }
 
+//REORDENAMIENTO
+
 int natcomp (const void * a, const void * b){
 	return ( *(int*)a - *(int*)b );
 }
 
 int wpcomp (const void * a, const void * b){
-	const VertexIsHere v1 = *(VertexIsHere*)a;
-	const VertexIsHere v2 = *(VertexIsHere*)b;
-	
-	const u32 j = v1->grade;
-	const u32 k = v2->grade; 
-	
-	if (j > k){
-		return -1;
-	} else if (j == k){
-		return 0;
-	}else{
-		return 1;
-	}
+
+    struct Vertice x1 = *(const struct Vertice *)a;
+    struct Vertice x2 = *(const struct Vertice *)b;
+    if (x1.grade < x2.grade)
+	    return 1; 
+    else if (x1.grade > x2.grade)
+	    return -1;   
+    else
+	    return 0;
+}
+
+int bloque0comp (const void * a, const void * b){
+
+	return 1
+
+}
+
+int bloque1comp (const void * a, const void * b){
+
+    struct Vertice x1 = *(const struct Vertice *)a;
+    struct Vertice x2 = *(const struct Vertice *)b;
+    if (x1.color > x2.color)
+        return 1; 
+    else if (x1.color < x2.color)
+        return -1;   
+    else
+	    return 0;
+}
+
+int bloque2comp (const void * a, const void * b){
+
+	return 1;
+
+}
+
+int bloque3comp (const void * a, const void * b){
+
+	return 1;
+}
+
+int bloque4comp (const void * a, const void * b){
+
+	return 1;
 }
 
 
@@ -369,24 +402,26 @@ void OrdenNatural(WinterIsHere W){
 
 void OrdenWelshPowell(WinterIsHere W){
 
-	int j,k;
-	u32 prej;
-	u32 aux; 
-	for (j=0; j< W->v -1; j++){
-		prej = j;
-		for (k=j+1; k< W->v; k++){
-			if (W->listV[W->orden[prej]]->grade < W->listV[W->orden[k]]->grade){
-				prej = k;
-			}
-		}
-		if (prej != j){
-			aux = W->orden[j];
-			W->orden[j] = W->orden[prej];
-			W->orden[prej] = aux;
-		}
-	}
+	qsort(W->orden, W->v, sizeof(VertexIsHere), wpcomp);
 }
 
+void ReordenamientoManteniendoBloqueColores(WinterIsHere W, u32 x){
+
+	if(x==0){
+	    qsort((W->orden),(W->v),sizeof(VertexIsHere), bloque0comp);
+	}
+	else if(x==1){
+		    qsort((W->orden),(W->v),sizeof(VertexIsHere), bloque1comp);
+	}
+	else if(x==2){
+	    qsort((W->orden),(W->v),sizeof(VertexIsHere), bloque2comp);
+	}
+	else if(x==3)
+	    qsort((W->orden),(W->v),sizeof(VertexIsHere), bloque3comp);
+	else{
+	    qsort((W->orden),(W->v),sizeof(VertexIsHere), bloque4comp);
+	}
+}
 
 
 int main(void) {
@@ -396,7 +431,7 @@ int main(void) {
     int i;
     u32 sumofgrades = 0;
     u32 greedyresult = 0;
-    int bip;
+    int bip = 0;
     
     greedyresult = Greedy(W);
 
@@ -420,26 +455,8 @@ int main(void) {
     printf ("-> Suma de Grados: %u\n", sumofgrades);
     printf ("-> Cantidad de colores: %u\n", maxcolor);
     printf ("-> W tiene un coloreo propio\n");
-
-
-   	
-   	u32 nombre, color, grado;
-
-   	OrdenWelshPowell(W);
-   	
-   	int j;
-   	for(j=0;j<W->v;j++){
-   		nombre = NombreDelVertice(W, j);
-   		color = ColorDelVertice(W, j);
-   		grado = GradoDelVertice(W, j);
-    	printf("VERTEX %d of %u: (%u, %u, %d, [x])\n", j+1, W->v, nombre, color, grado);
-    }
-    
-
-
-   	printf ("El resultado de Greedy es: %u\n", greedyresult);
-
-   	printf("El resultado de Bipartito es: %d\n", bip);
+   	printf ("->El resultado de Greedy es: %u\n", greedyresult);
+   	printf ("->El resultado de Bipartito es: %d\n", bip);
 
 
     return 1;
