@@ -148,6 +148,17 @@ int Primavera(WinterIsHere W){
 
 u32 Greedy(WinterIsHere W){
 	
+	/*
+	Fuente: http://www.geeksforgeeks.org/graph-coloring-set-2-greedy-algorithm/
+
+	1. Color first vertex with first color.
+	2. Do following for remaining V-1 vertices.
+          a) Consider the currently picked vertex and color it with the 
+             lowest numbered color that has not been used on any previously
+             colored vertices adjacent to it. If all previously used colors 
+             appear on vertices adjacent to v, assign a new color to it.
+
+	*/
 
 	u32 i,j,k;
     u32 x;
@@ -375,9 +386,6 @@ void OrdenWelshPowell(WinterIsHere W){
 		}
 	}
 }
-	//qsort(W->orden, W->v, sizeof(VertexIsHere), wpcomp);
-
-
 
 
 
