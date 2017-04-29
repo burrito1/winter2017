@@ -27,9 +27,9 @@ Donde listV es un arreglo con todos los vertices:
         u32 *ngbrs;                 //Arreglo con indices a sus vecinos
     } VerticeSt;
     
-##### Lista de funciones #####
+#### Lista de funciones ####
 
-######Construccion y destrucción del grafo######
+##### Construccion y destrucción del grafo #####
 
 **NewWinter()**: Inicializa un grafo W.
 
@@ -50,7 +50,7 @@ Donde listV es un arreglo con todos los vertices:
         
 **Bipartito()**: Devuelve 1 si el grafo es Bipartito, 0 caso contrario.
 
-######Informacion del Vertice######
+##### Informacion del Vertice #####
 
 **NumeroDeVertices()**: Devuelve el numero de vertices de W.
 
@@ -62,7 +62,7 @@ Donde listV es un arreglo con todos los vertices:
 
 **IesimoVerticeEnElOrden()**: Devuelve la etiqueta del vertice i en el orden guardado en ese momento.
 
-######Funciones de ordenación######
+##### Funciones de ordenación #####
 
 **OrdenNatural()**: Ordena los vertices en orden creciente de sus “nombres” reales.
 
@@ -73,7 +73,7 @@ no creciente.
 
 **ReordenManteniendoBloqueColores()**: Reordena el orden de los vertices manteniendo los bloques de vertices pintados por los mismos colores.
 
-######Funciones de los vertices######
+##### Funciones de los vertices #####
 **NombreDelVertice()**: Devuelve el nombre real del vertice.
 
 **ColorDelVertice()**: Devuelve el color con el que esta coloreado el vertice.
