@@ -2,22 +2,23 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-//#define FILENAME        "xg222222222222222222222222222222222222222222222222222222222222222222222222222222222222"
-#define mode            "r"
-int global = 0;                 //Variable global de AddVertex
+//#define FILENAME      "xg22"          //Usado para implementar test y no tener que cargar el FILENAME 1000 veces
+#define mode            "r"             //Modo en el que se lee el archivo input
+
+int global = 0;                         //Variable global de AddVertex
 
 typedef struct Grafo {
-    VertexIsHere *listV;        //Lista de vertices
-    u32 v;                      //Cantidad vertices
-    u32 w;                      //Cantidad de lados
-    u32 *orden;                 //Orden de indices para greedy
+    VertexIsHere *listV;                //Lista de todos vertices
+    u32 v;                              //Cantidad vertices
+    u32 w;                              //Cantidad de lados
+    u32 *orden;                         //Orden de indices para greedy
 } WinterSt;
 
 typedef struct Vertice {
-    u32 name;                   //Nombre del vertice
-    u32 color;                  //Color asignado al vertice
-    u32 grade;                  //Cantidad de vecinos del vertice
-    u32 *ngbrs;                 //Arreglo con indices a sus vecinos
+    u32 name;                           //Nombre del vertice
+    u32 color;                          //Color asignado al vertice
+    u32 grade;                          //Cantidad de vecinos del vertice
+    u32 *ngbrs;                         //Arreglo con indices a sus vecinos
 } VerticeSt;
 
 
@@ -33,20 +34,25 @@ WinterIsHere NewWinter() {
 
 u32 AddVertex(WinterIsHere W, unsigned int x){
     u32 i = 0;
-    while(i<global && x != W->listV[i]->name){
+    while(i<global && x != W->listV[i]->name){                   //Busco la posicion del vertice i etiquetado
         i++;
     }
-    if(i==global){
-        W->listV[i] = calloc(1, sizeof(VertexIsHere));
-        W->orden[i] = i;
-        W->listV[i]->name = x;
-        W->listV[i]->color = i+1;
-        W->listV[i]->grade++;
-        printf("NEW V: %u:(%u, %u, %u, [])\n", x, W->listV[i]->name, W->listV[i]->color,W->listV[i]->grade);
-        global++;
+    if(i==global){                                              //Si la posicion es igual a global no esta en la lista
+        
+        W->listV[i] = calloc(1, sizeof(VertexIsHere));          //Reservo espacio
+        W->orden[i] = i;                                        //Agrego su indice al orden para Greedy
+        W->listV[i]->name = x;                                  //Lo etiqueto x (el parametro)
+        W->listV[i]->color = i+1;                               //Le doy color igual a su indice+1 asi tiene un coloreo propio el grafo
+        W->listV[i]->grade++;                                   //Aumento su grado a 1
+        global++;                                               //Aumento global porque la lista crecio
+        
+        //printf("NEW V: %u:(%u, %u, %u, [])\n", x, W->listV[i]->name, W->listV[i]->color,W->listV[i]->grade);
+        
         return i;
-    } else {
-        W->listV[i]->grade++;
+    } else {                                                    //Esto quiere decir que ya estaba en la lista
+        
+        W->listV[i]->grade++;                                   //Aumento su grado porque algun vecino de el llamo a AddVertex()
+        
         //printf("GRADE ++ IN V: %u:(%u, %u, %u, [])\n", x, W->listV[i]->name, W->listV[i]->color,W->listV[i]->grade);
         return i;
     }
@@ -55,7 +61,7 @@ u32 AddVertex(WinterIsHere W, unsigned int x){
 void AddNeighbors(WinterIsHere W, u32 i, u32 ngbr){
     u32 j = 0;
     while(W->listV[i]->ngbrs[j] != 0) j++;
-    W->listV[i]->ngbrs[j] = ngbr;
+    W->listV[i]->ngbrs[j] = ngbr;      						     //Agrego el vecino en la posicion j de vecinos del vertice i
 }
 
 
@@ -92,23 +98,20 @@ int LoadWinter(WinterIsHere W){
 
     while(fscanf(ifp, "e %u %u\n", &x1, &x2) != EOF)
     {   
-        Verticei=AddVertex(W,x1);
-        Verticej=AddVertex(W,x2);
+        Verticei=AddVertex(W,x1);                                      //AddVertex del input en la posicion x1
+        Verticej=AddVertex(W,x2);                                      //AddVertex del input en la posicion x2
         xi1[i] = Verticei;
         xj2[i] = Verticej;
         i++;
     }
     
-    printf("Agregando vecinos\n");
-    printf ("...............................\n");
-
     for(i=0; i<W->v;i++){
-        W->listV[i]->ngbrs = calloc(W->listV[i]->grade, sizeof(u32));
+        W->listV[i]->ngbrs = calloc(W->listV[i]->grade, sizeof(u32));  //Espacio en el arreglo de vecinos dependiendo del grado que tenga i
     }
 
     for(i=0; i<W->w;i++){
-        AddNeighbors(W,xi1[i],xj2[i]);
-        AddNeighbors(W,xj2[i],xi1[i]);
+        AddNeighbors(W,xi1[i],xj2[i]);                                 //Agrego el vecino x2 del vertice x1
+        AddNeighbors(W,xj2[i],xi1[i]);                                 //Agrego el vecino x1 del vertice x2
     }
 
     return 1;
@@ -122,7 +125,7 @@ WinterIsHere WinterIsComing(){
     error = LoadWinter(W);
 
     if (error != 1){
-    	return NULL;
+    	return NULL;                                                   //Devuelve un puntero a NULL en caso de error
     }
     else{
     	return W;
@@ -131,13 +134,13 @@ WinterIsHere WinterIsComing(){
 }
 
 int Primavera(WinterIsHere W){
-    //Destrye W y libera la memoria alocada. Return 1 = OK , 0 = ERROR
+    
     int i = 0;
     for(i=0; i<W->v;i++){
-        free(W->listV[i]->ngbrs);
-        free(W->listV[i]);
+        free(W->listV[i]->ngbrs);                                      //Primero libero los vecinos de i
+        free(W->listV[i]);                                             //Segundo libero el vertice i
     }
-    free(W->orden);
+    free(W->orden);                                                    //Libero el arreglo de indices
     free(W);
     W = NULL;
     return 1;
@@ -148,49 +151,101 @@ u32 Greedy(WinterIsHere W){
 
 	u32 i,j,k;
     u32 x;
-    u32 highestcolor = 0;
+    u32 highestcolor = 0;                                                  //Color 0 en caso de recibir un grafo NULL
 
-    (W->listV[(W->orden[0])])->color = 1;
+    (W->listV[(W->orden[0])])->color = 1;                                  //Le asigno color 1 al primer vertice
 
     for (i = 1; i < W->v; i++) {
-        (W->listV[(W->orden[i])])->color = -1;
+        (W->listV[(W->orden[i])])->color = -1;                             //Le asigno color -1 al resto de los vertices
     }
     
-    int coloresdisponibles[W->v];
+    int coloresdisponibles[W->v];                                          //Creo un arrlego entero de W->v valores
     for (x = 0; x < W->v; x++) {
-        coloresdisponibles[x] = 0;
+        coloresdisponibles[x] = 0;                                         //Le asigno 0 a cada valor del arreglo
     }
+
     u32 index;
-    for (j = 1; j < W->v; j++) {
+    for (j = 1; j < W->v; j++) {                                           //Recorro j
         
-        for (k = 0; k < (W->listV[(W->orden[j])])->grade; k++) { 
+        for (k = 0; k < (W->listV[(W->orden[j])])->grade; k++) {           //Recorro k vecinos de j
             index = W->listV[(W->orden[j])]->ngbrs[k];
-            if (W->listV[index]->color != -1) {
-                coloresdisponibles[(W->listV[index])->color] = 1; 
-            }
-        }
+            if (W->listV[index]->color != -1) {                            //Si el color en el k vecino de j no es -1 (Ya esta pintado)
+                coloresdisponibles[(W->listV[index])->color] = 1;          //Marco en mi arreglo de colores como 1 en la posicion color de k
+            }                                                              //De esta forma sabemos que el color igual al indice de esa posicion
+        }                                                                  //No puede ser usado para pintar j
 
         for (x = 1; x < W->v; x++) {
-            if (coloresdisponibles[x] == 0) {
+            if (coloresdisponibles[x] == 0) {                              //Recorro el arreglo hasta encontrar un color disponible
                 break;
             }
         }
 
-        (W->listV[(W->orden[j])])->color = x;
+        (W->listV[(W->orden[j])])->color = x;                              //Pinto j con el color x donde x es la posicion+1 del primer disponible
         if(x > highestcolor){
-            highestcolor = x;
+            highestcolor = x;                                              //Si el nuevo color es mas grande que mi mayor color anterior lo cambio
         }
 
         for (k = 0; k < (W->listV[(W->orden[j])])->grade; k++) {
             index = W->listV[(W->orden[j])]->ngbrs[k];
             if (W->listV[index]->color != -1) {
-                coloresdisponibles[(W->listV[index])->color] = 0; 
+                coloresdisponibles[(W->listV[index])->color] = 0;          //Ajusto mi arreglo de colores para mi proximo j
             }
         }
     }
 
     return highestcolor;
 }
+
+int Bipartito (WinterIsHere W){
+
+	u32 i,j,k;
+    u32 x;
+
+	(W->listV[(W->orden[0])])->color = 1;                                    //Coloreo el primer vertice con 1
+
+    for (i = 1; i < W->v; i++) {
+        (W->listV[(W->orden[i])])->color = -1;                               //Coloreo el resto de los vertices con -1
+    }
+
+    int coloresdisponibles[1];                                               //Creo un arreglo de dos colores
+    for (x = 0; x < 2; x++) {
+        coloresdisponibles[x] = 0;                                           //Le asigno 0 a los dos valores del arreglo
+    }
+	
+	u32 index;
+    for (j = 1; j < W->v; j++) {                                             //Recorro cada j
+        
+        for (k = 0; k < (W->listV[(W->orden[j])])->grade; k++) {             //Recorro cada vecino de k de j
+            index = W->listV[(W->orden[j])]->ngbrs[k];
+            if (W->listV[index]->color == -1) {                              //Si el color del vecino k de j es -1 (No esta pintado)
+                coloresdisponibles[0] = 0;                                   //->  Puedo pintarlo como 1
+                coloresdisponibles[1] = 0;                                   //->  Puedo pintarlo como 2
+            }else if (W->listV[index]->color == 1) {                         //Si el color del vecino k de j es 1 (Pintado con Azul)
+            	coloresdisponibles[0] = 1;                                   //->  No puedo pintarlo como 1
+            	coloresdisponibles[1] = 0;                                   //->  Si puedo pintarlo como 2
+            }else if (W->listV[index]->color == 2) {                         //Si el color del vecino k de j es 2 (Pintado con Negro)
+            	coloresdisponibles[0] = 0;                                   //->  Si puedo pintarlo como 1
+            	coloresdisponibles[1] = 1;                                   //->  No puedo pintarlo como 2
+            }
+        }
+
+        if (coloresdisponibles[0] == 0 && coloresdisponibles[1] == 1) {
+          	W->listV[(W->orden[j])]->color = 1;                             //Pinto j como 1
+        } else if (coloresdisponibles[0] == 1 && coloresdisponibles[1] == 0){
+          	W->listV[(W->orden[j])]->color = 2;                             //Pinto j como 2  
+        } else {
+          	return 0;                                                       //Como el arreglo de colores es [1,1] no tengo colores que 
+        }                                                                   //asignarle a j, por lo tanto devuelvo 0 (No es bipartito)
+            
+
+        coloresdisponibles[0] = 0;                                          //Ajusto los colores diponibles para el proximo j
+        coloresdisponibles[1] = 0;
+        
+    }
+
+    return 1;
+}
+
 
 u32 NombreDelVertice (WinterIsHere W, u32 x){
 
@@ -333,54 +388,50 @@ int main(void) {
     int i;
     u32 sumofgrades = 0;
     u32 greedyresult = 0;
-
+    int bip;
     
     greedyresult = Greedy(W);
+
+   	bip = Bipartito(W);
 
     for(i=0;i<W->v;i++){
     	//printf("VERTEX %d of %u: (%u, %u, %u, [x])\n", i+1, W->v, W->listV[i]->name, W->listV[i]->color,W->listV[i]->grade);
     	sumofgrades = sumofgrades + W->listV[i]->grade;
     }
     
-    u32 vertices, lados , numerosdeverticesdeuncolor, maxcolor, iesimoverticeeni;
+    u32 vertices, lados, maxcolor;
 
     vertices = NumeroDeVertices(W);
     lados = NumeroDeLados(W);
-    numerosdeverticesdeuncolor = NumeroDeVerticesDeColor(W, 2);
     maxcolor = NumeroDeColores(W);
-    iesimoverticeeni = IesimoVerticeEnElOrden(W, 2);
 
     printf ("...............................\n");
     printf ("Grafo W:\n");
     printf ("-> Vertices: %u\n", vertices);
     printf ("-> Lados: %u\n", lados);
-    printf ("-> Numero de vertices color 2: %u\n", numerosdeverticesdeuncolor);
-    printf ("-> Numero de colores: %u\n", maxcolor);
-    printf ("-> Iesimo Vertice en 2: %u\n", iesimoverticeeni);
-    printf ("-> Suma de Grados (Debe ser lados*2): %u\n", sumofgrades);
-    printf ("-> Cantidad de colores: %u\n", W->v);
+    printf ("-> Suma de Grados: %u\n", sumofgrades);
+    printf ("-> Cantidad de colores: %u\n", maxcolor);
     printf ("-> W tiene un coloreo propio\n");
-    printf ("...............................\n");
-   	printf ("Starting Greedy\n");
+
 
    	
-   	u32 color, grado;
+   	u32 nombre, color, grado;
 
    	OrdenWelshPowell(W);
    	
    	int j;
    	for(j=0;j<W->v;j++){
-   		//nombre = NombreDelVertice(W, j);
+   		nombre = NombreDelVertice(W, j);
    		color = ColorDelVertice(W, j);
    		grado = GradoDelVertice(W, j);
-    	printf("VERTEX %d of %u: (%u, %u, %d, [x])\n", j+1, W->v, W->orden[j], color, grado);
+    	printf("VERTEX %d of %u: (%u, %u, %d, [x])\n", j+1, W->v, nombre, color, grado);
     }
     
 
 
    	printf ("El resultado de Greedy es: %u\n", greedyresult);
 
-
+   	printf("El resultado de Bipartito es: %d\n", bip);
 
 
     return 1;
