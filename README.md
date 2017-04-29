@@ -73,7 +73,7 @@ for (i = 1; i < W->v; i++) {
 Creamos un arreglo con todos los colores posibles con los que podemos coloriar a cada vertices, si el arreglo en la posicion x tiene un 0, significa que x+1 es un color disponible para pintar al vertice.
 
 ```c
-        int coloresdisponibles[W->v];
+int coloresdisponibles[W->v];
 for (x = 0; x < W->v; x++) {
     coloresdisponibles[x] = 0;
 }
@@ -97,7 +97,8 @@ for (j = 1; j < W->v; j++) {                                           //Recorro
         }
     }
 
-    (W->listV[(W->orden[j])])->color = x;                              //Pinto j con el color x donde x es la posicion+1 del primer disponible
+    W->listV[(W->orden[j])]->color = x;                              //Pinto j con el color x donde x es la posicion+1 del primer disponible
+    
     if(x > highestcolor){
         highestcolor = x;                                              //Si el nuevo color es mas grande que mi mayor color anterior lo cambio
     }
