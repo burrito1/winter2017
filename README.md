@@ -56,9 +56,7 @@ _Greedy()_: Colorea el grafo W de la siguiente forma:
 >1. Colorea el primer vertice con el primer color.
 >2. Para los siguientes V-1 vertices: Colorear el vertice elejido con el menor color posible talque ninguno de sus vecinos tengan ese color. En el caso de no ser posible y que todos los colores usados esten coloreando vecinos de v, pintar v con un nuevo color c.
 
-##### Implementación de greedy: #####
-
-Coloreamos el primer vertice con el primer color.
+Coloreamos el primer vertice en el orden con el primer color.
     
     (W->listV[(W->orden[0])])->color = 1; 
     
