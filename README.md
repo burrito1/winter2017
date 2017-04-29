@@ -181,7 +181,7 @@ for (j = 1; j < W->v; j++) {                                             //Recor
 
 ```
 
-En caso de que las iteraciones llegen al final esto quiere decir que ele grafo fue coloreado con dos colores por lo tanto podemos devolver el valor numerico 1 para indicar que el grafo s bipartito.
+En caso de que las iteraciones llegen al final esto quiere decir que el grafo fue coloreado con 2 colores por lo tanto podemos devolver el valor numerico 1 para indicar que el grafo es bipartito.
 
 
 ```c
@@ -224,6 +224,6 @@ _IesimoVecino()_: Devuelve la etiqueta del vecino numero i del vertice.
 
 ## 8. Dificultades ##
 
-Por una cuestion de tiempo y como fuimos siguiendo el PDF del Proyecto en orden las funcion AleatorizarVertices() y ReordenManteniendoBloqueColores(), no estan testeadas ni bien implementadas creemos.
+Como fuimos siguiendo en orden el PDF del Proyecto, por una cuestion de tiempo las ultimas dos funciones de ordenamiento AleatorizarVertices() y ReordenManteniendoBloqueColores(), no estan testeadas ni bien implementadas creemos.
 
 El proyecto nos parecio entretenido, tiene al principio una cuota de dificultad extra cuando no se tiene una estructura lo suficientemente solida como para resolver las inquietudes que van surgiendo, pero una vez sorteada esta dificultad el proyecto se hace mucho mas sencillo y llevadero.
